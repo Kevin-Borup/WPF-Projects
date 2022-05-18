@@ -1,0 +1,33 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net6.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <UseWPF>true</UseWPF>
+    <PlatformTarget>x64</PlatformTarget>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Graphics\BottleBeer.png" />
+    <None Remove="Graphics\BottleSoda.png" />
+    <None Remove="Graphics\ConveyorBelt.png" />
+    <None Remove="Graphics\ConveyorLift.png" />
+    <None Remove="Graphics\EndBeer.png" />
+    <None Remove="Graphics\EndSoda.png" />
+    <None Remove="Graphics\Producer.png" />
+    <None Remove="Graphics\Sorter.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Graphics\BottleBeer.png" />
+    <Resource Include="Graphics\BottleSoda.png" />
+    <Resource Include="Graphics\ConveyorBelt.png" />
+    <Resource Include="Graphics\ConveyorLift.png" />
+    <Resource Include="Graphics\EndBeer.png" />
+    <Resource Include="Graphics\EndSoda.png" />
+    <Resource Include="Graphics\Producer.png" />
+    <Resource Include="Graphics\Sorter.png" />
+  </ItemGroup>
+
+</Project>

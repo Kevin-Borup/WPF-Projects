@@ -1,0 +1,64 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v6.0",
+    "signature": ""
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v6.0": {
+      "Microsoft.Extensions.DependencyInjection.Abstractions/5.0.0": {
+        "runtime": {
+          "lib/netstandard2.0/Microsoft.Extensions.DependencyInjection.Abstractions.dll": {
+            "assemblyVersion": "5.0.0.0",
+            "fileVersion": "5.0.20.51904"
+          }
+        }
+      },
+      "NAutowired/2.2.0": {
+        "dependencies": {
+          "NAutowired.Core": "2.2.0"
+        },
+        "runtime": {
+          "lib/net5.0/NAutowired.dll": {
+            "assemblyVersion": "2.2.0.0",
+            "fileVersion": "2.2.0.0"
+          }
+        }
+      },
+      "NAutowired.Core/2.2.0": {
+        "dependencies": {
+          "Microsoft.Extensions.DependencyInjection.Abstractions": "5.0.0"
+        },
+        "runtime": {
+          "lib/net5.0/NAutowired.Core.dll": {
+            "assemblyVersion": "2.2.0.0",
+            "fileVersion": "2.2.0.0"
+          }
+        }
+      }
+    }
+  },
+  "libraries": {
+    "Microsoft.Extensions.DependencyInjection.Abstractions/5.0.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-ORj7Zh81gC69TyvmcUm9tSzytcy8AVousi+IVRAI8nLieQjOFryRusSFh7+aLk16FN9pQNqJAiMd7BTKINK0kA==",
+      "path": "microsoft.extensions.dependencyinjection.abstractions/5.0.0",
+      "hashPath": "microsoft.extensions.dependencyinjection.abstractions.5.0.0.nupkg.sha512"
+    },
+    "NAutowired/2.2.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-cHMy1Y4WNqyAgWlsdMmKmUcOENhEp9G5cX7fR0TH6fob2DQVTEfU05QGzUPR8MHOhX3VOP+az2TchDq2vqKSVA==",
+      "path": "nautowired/2.2.0",
+      "hashPath": "nautowired.2.2.0.nupkg.sha512"
+    },
+    "NAutowired.Core/2.2.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-KSzeDoWMzfiBrEP+xxEp6AET2dUGZFLDO4ZP+RokJggJ831OZVBHzvmcsq05+T1dtuGDS3yLNqSWxhK2tZNWiw==",
+      "path": "nautowired.core/2.2.0",
+      "hashPath": "nautowired.core.2.2.0.nupkg.sha512"
+    }
+  }
+}
