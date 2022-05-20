@@ -4,23 +4,94 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:WPF_VendingMachine.Views"
-             mc:Ignorable="d" 
-             d:DesignHeight="1000" d:DesignWidth="1800 ">
+             xmlns:vm="clr-namespace:WPF_VendingMachine.ViewModels"
+             mc:Ignorable="d" d:DesignWidth="1800 " Height="1033">
+    <UserControl.Resources>
+        <DataTemplate DataType="{x:Type vm:BottleViewModel}">
+            <Canvas>
+                <Image 
+                    Source="{Binding ImageSource}" 
+                    MaxWidth="{Binding MaxWidth}" 
+                    MaxHeight="{Binding MaxHeight}" 
+                    Canvas.Left="{Binding Location.X}" 
+                    Canvas.Top="{Binding Location.Y}"/>
+            </Canvas>
+        </DataTemplate>
+    </UserControl.Resources>
     <Grid>
-        <Image x:Name="Producer" HorizontalAlignment="Left" Height="174" Margin="84,398,0,0" VerticalAlignment="Top" Width="295" Source="../Graphics/Producer.png"/>
-        <Image x:Name="Sorter" HorizontalAlignment="Left" Height="302" Margin="786,334,0,0" VerticalAlignment="Top" Width="342" Source="../Graphics/Sorter.png"/>
-        <Image x:Name="SodaEnd" HorizontalAlignment="Left" Height="208" Margin="1466,37,0,0" VerticalAlignment="Top" Width="271" Source="../Graphics/EndSoda.png"/>
-        <Image x:Name="BeerEnd" HorizontalAlignment="Left" Height="220" Margin="1424,639,0,0" VerticalAlignment="Top" Width="259" Source="../Graphics/EndBeer.png"/>
-        <Image x:Name="ConveyorStart" HorizontalAlignment="Left" Height="65" Margin="375,505,0,0" VerticalAlignment="Top" Width="448" Source="../Graphics/ConveyorBelt.png"/>
-        <Image x:Name="ConveyorBottom" HorizontalAlignment="Left" Height="108" Margin="977,784,0,0" VerticalAlignment="Top" Width="484" Source="../Graphics/ConveyorBelt.png"/>
-        <Image x:Name="ConveyorLiftBottom" HorizontalAlignment="Left" Height="236" Margin="900,594,0,0" VerticalAlignment="Top" Width="103" Source="../Graphics/ConveyorLift.png"/>
-        <Image x:Name="ConveyorLiftTop" HorizontalAlignment="Left" Height="222" Margin="900,160,0,0" VerticalAlignment="Top" Width="115" Source="../Graphics/ConveyorLift.png"/>
-        <Image x:Name="ConveyorBottom_Copy" HorizontalAlignment="Left" Height="98" Margin="977,160,0,0" VerticalAlignment="Top" Width="535" Source="../Graphics/ConveyorBelt.png"/>
-        <Button Content="Soda" Command="{Binding SodaBottleCommand}" HorizontalAlignment="Left" Margin="174,586,0,0" VerticalAlignment="Top"/>
-        <Label Content="Automatic: " HorizontalAlignment="Left" Margin="154,361,0,0" VerticalAlignment="Top"/>
-        <RadioButton Command="{Binding AutomaticCommand}" IsChecked="{Binding AutomaticOn}" Content="On" HorizontalAlignment="Left" Margin="229,367,0,0" VerticalAlignment="Top"/>
-        <RadioButton Command="{Binding AutomaticCommand}" IsChecked="{Binding AutomaticOff}" Content="Off" HorizontalAlignment="Left" Margin="278,367,0,0" VerticalAlignment="Top"/>
-        <Button Content="Beer" Command="{Binding BeerBottleCommand}" HorizontalAlignment="Left" Margin="268,586,0,0" VerticalAlignment="Top"/>
+        <StackPanel>
+            <StackPanel>
+                <StackPanel FlowDirection="RightToLeft" Orientation="Horizontal">
+                    <Canvas Width="277" VerticalAlignment="Bottom" Height="200">
+                        <Image x:Name="SodaEnd" HorizontalAlignment="Stretch" Height="208" VerticalAlignment="Bottom" Width="271" Source="../Graphics/EndSoda.png"/>
+                        <Border BorderBrush="Black" BorderThickness="1" Width="108" Height="48" Canvas.Left="76" Canvas.Top="132">
+                            <StackPanel >
+                                <Label Content="Power" HorizontalAlignment="Center" />
+                                <StackPanel Orientation="Horizontal">
+                                    <RadioButton Content="On" Command="{Binding PowerChangeSodaCommand}" IsChecked="{Binding SodaOn}" HorizontalAlignment="Left" Margin="5,0,0,0"/>
+                                    <RadioButton Content="Off" Command="{Binding PowerChangeSodaCommand}" IsChecked="{Binding SodaOff}" HorizontalAlignment="Right" Margin="25,0,0,0"/>
+                                </StackPanel>
+                            </StackPanel>
+                        </Border>
+                    </Canvas>
+                    <Image x:Name="ConveyorTop" Height="98"  VerticalAlignment="Bottom" Width="568" Source="../Graphics/ConveyorBelt.png"/>
+
+                    <Image x:Name="ConveyorLiftTop" HorizontalAlignment="Left" Height="222" VerticalAlignment="Top" Width="115" Source="../Graphics/ConveyorLift.png"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Panel.ZIndex="-10">
+                    <StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <Label Content="Automatic: " HorizontalAlignment="Left" VerticalAlignment="Center" Margin="80,0,0,0"/>
+                            <RadioButton Command="{Binding AutomaticCommand}" IsChecked="{Binding AutomaticOn}" Content="On" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                            <RadioButton Command="{Binding AutomaticCommand}" IsChecked="{Binding AutomaticOff}" Content="Off" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,0,0,0"/>
+                        </StackPanel>
+                        <Image x:Name="Producer" HorizontalAlignment="Left" Height="174"  VerticalAlignment="Center" Width="295" Source="../Graphics/Producer.png"/>
+                        <StackPanel Orientation="Horizontal">
+                            <Button Content="Soda" Command="{Binding SodaBottleCommand}" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="100,0,0,0"/>
+                            <Button Content="Beer" Command="{Binding BeerBottleCommand}" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="30,0,0,0"/>
+                        </StackPanel>
+                    </StackPanel>
+                    <Canvas Panel.ZIndex="-10">
+                        <ItemsControl ItemsSource="{Binding CreatedBottles}" Width="50" Height="50" Canvas.Top="110"/>
+                    </Canvas>
+                    <Image x:Name="ConveyorStart" Height="65"  VerticalAlignment="Bottom" Width="486" Source="../Graphics/ConveyorBelt.png" HorizontalAlignment="Center"/>
+                    <Canvas Width="277">
+                        <Image x:Name="Sorter" HorizontalAlignment="Left" Height="267"  VerticalAlignment="Top" Width="302" Source="../Graphics/Sorter.png"/>
+                        <Border BorderBrush="Black" BorderThickness="1" Width="108" Height="48" Canvas.Left="84" Canvas.Top="152">
+                            <StackPanel Canvas.Left="91" Canvas.Top="158" >
+                                <Label Content="Power" HorizontalAlignment="Center" />
+                                <StackPanel Orientation="Horizontal">
+                                    <RadioButton Content="Off" Command="{Binding PowerChangeSorterCommand}" IsChecked="{Binding SorterOff}" HorizontalAlignment="Left" Margin="5,0,0,0"/>
+                                    <RadioButton Content="On" Command="{Binding PowerChangeSorterCommand}" IsChecked="{Binding SorterOn}" HorizontalAlignment="Right" Margin="25,0,0,0"/>
+                                </StackPanel>
+                            </StackPanel>
+                        </Border>
+                    </Canvas>
+                </StackPanel>
+                <StackPanel  FlowDirection="RightToLeft" Orientation="Horizontal">
+                    <Canvas Width="256" Height="209" VerticalAlignment="Bottom">
+                        <Image x:Name="BeerEnd" HorizontalAlignment="Left" Height="220" VerticalAlignment="Bottom" Width="271" Source="../Graphics/EndBeer.png"/>
+                        <Border BorderBrush="Black" BorderThickness="1" Width="108" Height="48" Canvas.Left="74" Canvas.Top="144">
+                            <StackPanel Width="105" Height="46" >
+                                <Label Content="Power" HorizontalAlignment="Center" />
+                                <StackPanel Orientation="Horizontal">
+                                    <RadioButton Content="On" Command="{Binding PowerChangeBeerCommand}" IsChecked="{Binding BeerOn}" HorizontalAlignment="Left" Margin="5,0,0,0"/>
+                                    <RadioButton Content="Off" Command="{Binding PowerChangeBeerCommand}" IsChecked="{Binding BeerOff}" HorizontalAlignment="Right" Margin="25,0,0,0"/>
+                                </StackPanel>
+                            </StackPanel>
+                        </Border>
+                    </Canvas>
+                    <Image x:Name="ConveyorBottom" HorizontalAlignment="Left" Height="98" VerticalAlignment="Bottom" Width="568" Source="../Graphics/ConveyorBelt.png"/>
+
+                    <Image x:Name="ConveyorLiftBottom" HorizontalAlignment="Left" Height="236" VerticalAlignment="Top" Width="103" Source="../Graphics/ConveyorLift.png"/>
+                </StackPanel>
+            </StackPanel>
+        </StackPanel>
+
+
+
+
+
 
     </Grid>
 </UserControl>

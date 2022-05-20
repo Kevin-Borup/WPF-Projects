@@ -13,6 +13,8 @@ namespace WPF_VendingMachine.Models
     /// </summary>
     internal class BottleConsumer
     {
+        public bool KeepRunning { get; set; }
+
         private BottleQueue<Bottle> filteredBottles;
 
         /// <summary>
@@ -29,29 +31,35 @@ namespace WPF_VendingMachine.Models
         /// </summary>
         public void Consume()
         {
-            while (true)
+            while (KeepRunning)
             {
                 try
                 {
-                    if (Monitor.TryEnter(filteredBottles.Lock))
+                    if (Monitor.TryEnter(filteredBottles.Available))
                     {
                         if (filteredBottles.Empty)
                         {
-                            Monitor.Wait(filteredBottles.Lock);
+                            Monitor.Wait(filteredBottles.Available);
                         }
 
+                        while (!filteredBottles.Peek().Arrived)
+                        {
+                            Monitor.Wait(filteredBottles.Available);
+                        }
+
+                        filteredBottles.Dequeue();
                         //Program.ConsoleWriter(filteredBottles.Dequeue(), filteredBottles.Count);
-                        Monitor.Pulse(filteredBottles.Lock);
-                        Monitor.Exit(filteredBottles.Lock);
+                        Monitor.Pulse(filteredBottles.Available);
+                        Monitor.Exit(filteredBottles.Available);
                     }
                 }
                 catch (Exception e)
                 {
                     if (e is ThreadAbortException || e is ThreadInterruptedException || e is ArgumentNullException)
                     {
-                        if (Monitor.IsEntered(filteredBottles.Lock))
+                        if (Monitor.IsEntered(filteredBottles.Available))
                         {
-                            Monitor.Exit(filteredBottles.Lock);
+                            Monitor.Exit(filteredBottles.Available);
                         }
                         //Program.ExceptionWriter(e);
                     }

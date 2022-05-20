@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using WPF_VendingMachine.ViewModels;
 
 namespace WPF_VendingMachine.Models
 {
@@ -11,8 +12,12 @@ namespace WPF_VendingMachine.Models
     /// </summary>
     internal class Bottle
     {
+        public BottleViewModel BottleModel { get; private set; }
         public string Type { get; private set; }
         public int ID { get; private set; }
+
+        public bool Arrived { get; set; }
+
         /// <summary>
         /// Bottle Constructor, 
         /// </summary>
@@ -22,6 +27,16 @@ namespace WPF_VendingMachine.Models
         {
             Type = type;
             ID = id;
+            Arrived = false;
+
+            if (Type.Equals("Soda"))
+            {
+                BottleModel = new BottleViewModel("../Graphics/BottleSoda.png");
+            }
+            else if (Type.Equals("Beer"))
+            {
+                BottleModel = new BottleViewModel("../Graphics/BottleBeer.png");
+            }
         }
 
         /// <summary>

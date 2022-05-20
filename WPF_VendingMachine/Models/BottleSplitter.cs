@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -14,9 +15,13 @@ namespace WPF_VendingMachine.Models
     /// </summary>
     internal class BottleSplitter
     {
+        public event EventHandler<Events.BottleEventArgs> BottleSent;
+
         private BottleQueue<Bottle> producedBottles;
         private BottleQueue<Bottle> filteredBeerBottles;
         private BottleQueue<Bottle> filteredSodaBottles;
+
+        public bool KeepRunning { get; set; }
 
         /// <summary>
         /// The constructor needs the productionQueue to take from, and the 2 queue types to transfer to.
@@ -31,38 +36,54 @@ namespace WPF_VendingMachine.Models
             filteredSodaBottles = sodaQueue;
         }
 
+        protected void OnBottleSent(Bottle bottle)
+        {
+            Debug.WriteLine("Bottle Sent Event Called");
+            BottleSent?.Invoke(this, new Events.BottleEventArgs(bottle));
+        }
+
         /// <summary>
         /// This dequeues a bottle from the production Queue. The bottle is then transferen to the relevant queue.
         /// </summary>
         public void Split()
         {
-            Bottle bottle;
-            while (true)
+            Bottle bottle = null;
+            bool bottleToGet;
+            while (KeepRunning)
             {
-                while (true)
+                bottleToGet = true;
+                while (bottleToGet)
                 {
                     try
                     {
-                        if (Monitor.TryEnter(producedBottles.Lock))
+                        if (Monitor.TryEnter(producedBottles.Available))
                         {
                             if (producedBottles.Empty)
                             {
-                                Monitor.Wait(producedBottles.Lock);
+                                Monitor.Wait(producedBottles.Available);
                             }
 
-                            bottle = producedBottles.Dequeue();
-                            Monitor.Pulse(producedBottles.Lock);
-                            Monitor.Exit(producedBottles.Lock);
-                            break;
+                            while (!producedBottles.Peek().Arrived)
+                            {
+                                Monitor.Wait(producedBottles.Available);
+                            }
+
+                            if (producedBottles.TryDequeue(out bottle))
+                            {
+                                Monitor.Pulse(producedBottles.Available);
+                                bottleToGet = false;
+                            }
+
+                            Monitor.Exit(producedBottles.Available);
                         }
                     }
                     catch (Exception e)
                     {
                         if (e is ThreadAbortException || e is ThreadInterruptedException || e is ArgumentNullException)
                         {
-                            if (Monitor.IsEntered(producedBottles.Lock))
+                            if (Monitor.IsEntered(producedBottles.Available))
                             {
-                                Monitor.Exit(producedBottles.Lock);
+                                Monitor.Exit(producedBottles.Available);
                             }
                             //Program.ExceptionWriter(e);
                         }
@@ -91,21 +112,22 @@ namespace WPF_VendingMachine.Models
         /// <param name="bottle"></param>
         private void BottleTransfer(BottleQueue<Bottle> bottleQueue, Bottle bottle)
         {
-            while (true)
+            while (KeepRunning)
             {
                 try
                 {
-                    if (Monitor.TryEnter(bottleQueue.Lock))
+                    if (Monitor.TryEnter(bottleQueue.Available))
                     {
                         if (bottleQueue.Full)
                         {
-                            Monitor.Wait(bottleQueue.Lock);
+                            Monitor.Wait(bottleQueue.Available);
                         }
 
                         bottleQueue.Enqueue(bottle);
                         //Program.ConsoleWriter(bottle, bottleQueue.Count);
-                        Monitor.Pulse(bottleQueue.Lock);
-                        Monitor.Exit(bottleQueue.Lock);
+                        OnBottleSent(bottle);
+                        Monitor.Pulse(bottleQueue.Available);
+                        Monitor.Exit(bottleQueue.Available);
                         break;
                     }
                 }
@@ -113,9 +135,9 @@ namespace WPF_VendingMachine.Models
                 {
                     if (e is ThreadAbortException || e is ThreadInterruptedException || e is ArgumentNullException)
                     {
-                        if (Monitor.IsEntered(bottleQueue.Lock))
+                        if (Monitor.IsEntered(bottleQueue.Available))
                         {
-                            Monitor.Exit(bottleQueue.Lock);
+                            Monitor.Exit(bottleQueue.Available);
                         }
                         //Program.ExceptionWriter(e);
                     }

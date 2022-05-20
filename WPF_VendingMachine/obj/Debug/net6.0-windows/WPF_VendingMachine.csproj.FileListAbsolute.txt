@@ -7,6 +7,7 @@ C:\ZBC Data-Kommunikation\H2\WPF-Projects\WPF_VendingMachine\obj\Debug\net6.0-wi
 C:\ZBC Data-Kommunikation\H2\WPF-Projects\WPF_VendingMachine\obj\Debug\net6.0-windows\MainWindow.g.cs
 C:\ZBC Data-Kommunikation\H2\WPF-Projects\WPF_VendingMachine\obj\Debug\net6.0-windows\Views\VendingMachine.g.cs
 C:\ZBC Data-Kommunikation\H2\WPF-Projects\WPF_VendingMachine\obj\Debug\net6.0-windows\App.g.cs
+C:\ZBC Data-Kommunikation\H2\WPF-Projects\WPF_VendingMachine\obj\Debug\net6.0-windows\GeneratedInternalTypeHelper.g.cs
 C:\ZBC Data-Kommunikation\H2\WPF-Projects\WPF_VendingMachine\obj\Debug\net6.0-windows\WPF_VendingMachine_MarkupCompile.cache
 C:\ZBC Data-Kommunikation\H2\WPF-Projects\WPF_VendingMachine\obj\Debug\net6.0-windows\WPF_VendingMachine_MarkupCompile.lref
 C:\ZBC Data-Kommunikation\H2\WPF-Projects\WPF_VendingMachine\obj\Debug\net6.0-windows\MainWindow.baml

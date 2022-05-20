@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -14,8 +15,9 @@ namespace WPF_VendingMachine.Models
     /// </summary>
     internal class BottleProducer
     {
+        public event EventHandler<Events.BottleEventArgs> BottleCreated;
+
         private BottleQueue<Bottle> producedBottles;
-        EventHandler<Events.BottleEventArgs> BottleCreated;
 
         private int beerIncrement = 1;
         private int sodaIncrement = 1;
@@ -27,14 +29,14 @@ namespace WPF_VendingMachine.Models
         /// 
         /// </summary>
         /// <param name="bottles"></param>
-        public BottleProducer(BottleQueue<Bottle> bottles, EventHandler<Events.BottleEventArgs> bottleCreated)
+        public BottleProducer(BottleQueue<Bottle> bottles)
         {
             producedBottles = bottles;
-            BottleCreated = bottleCreated;
         }
         
         protected void OnBottleCreated(Bottle bottle)
         {
+            Debug.WriteLine("Bottle Created Event Called");
             BottleCreated?.Invoke(this, new Events.BottleEventArgs(bottle));
         }
 
@@ -65,19 +67,19 @@ namespace WPF_VendingMachine.Models
                 {
                     try
                     {
-                        if (Monitor.TryEnter(producedBottles.Lock))
+                        if (Monitor.TryEnter(producedBottles.Available))
                         {
                             if (producedBottles.Full)
                             {
                                 //Wait for the lock if the queue is full to avoid ressource waste.
-                                Monitor.Wait(producedBottles.Lock);
+                                Monitor.Wait(producedBottles.Available);
                             }
 
                             producedBottles.Enqueue(bottle);
                             //Program.ConsoleWriter(bottle, producedBottles.Count);
                             OnBottleCreated(bottle);
-                            Monitor.Pulse(producedBottles.Lock);
-                            Monitor.Exit(producedBottles.Lock);
+                            Monitor.Pulse(producedBottles.Available);
+                            Monitor.Exit(producedBottles.Available);
                             bottleToQueue = false;
                         }
                     }
@@ -85,9 +87,9 @@ namespace WPF_VendingMachine.Models
                     {
                         if (e is ThreadAbortException || e is ThreadInterruptedException || e is ArgumentNullException)
                         {
-                            if (Monitor.IsEntered(producedBottles.Lock))
+                            if (Monitor.IsEntered(producedBottles.Available))
                             {
-                                Monitor.Exit(producedBottles.Lock);
+                                Monitor.Exit(producedBottles.Available);
                             }
                             //Program.ExceptionWriter(e);
                         }
@@ -97,6 +99,7 @@ namespace WPF_VendingMachine.Models
                         }
                     }
                 }
+                Thread.Sleep(500);
             }
         }
 
@@ -124,18 +127,19 @@ namespace WPF_VendingMachine.Models
                 {
                     try
                     {
-                        if (Monitor.TryEnter(producedBottles.Lock))
+                        if (Monitor.TryEnter(producedBottles.Available))
                         {
                             if (producedBottles.Full)
                             {
                                 //Wait for the lock if the queue is full to avoid ressource waste.
-                                Monitor.Wait(producedBottles.Lock);
+                                Monitor.Wait(producedBottles.Available);
                             }
-
+                            Debug.WriteLine("Bottle Enqueued");
                             producedBottles.Enqueue(bottle);
                             //Program.ConsoleWriter(bottle, producedBottles.Count);
-                            Monitor.Pulse(producedBottles.Lock);
-                            Monitor.Exit(producedBottles.Lock);
+                            OnBottleCreated(bottle);
+                            //Monitor.Pulse(producedBottles.Lock);
+                            Monitor.Exit(producedBottles.Available);
                             break;
                         }
                     }
@@ -143,9 +147,9 @@ namespace WPF_VendingMachine.Models
                     {
                         if (e is ThreadAbortException || e is ThreadInterruptedException || e is ArgumentNullException)
                         {
-                            if (Monitor.IsEntered(producedBottles.Lock))
+                            if (Monitor.IsEntered(producedBottles.Available))
                             {
-                                Monitor.Exit(producedBottles.Lock);
+                                Monitor.Exit(producedBottles.Available);
                             }
                             //Program.ExceptionWriter(e);
                         }

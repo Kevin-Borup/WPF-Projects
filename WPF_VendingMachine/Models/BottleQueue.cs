@@ -14,7 +14,8 @@ namespace WPF_VendingMachine.Models
     /// <typeparam name="T"></typeparam>
     internal class BottleQueue<T> : Queue<T>
     {
-        public object Lock;
+        public object Available;
+        public object Arrived;
         public int MaxLength { get; private set; }
         public bool Full { get; private set; }
         public bool Empty { get; private set; }
@@ -26,7 +27,8 @@ namespace WPF_VendingMachine.Models
         public BottleQueue(int maxLength) : base(maxLength)
         {
             MaxLength = maxLength;
-            Lock = new object();
+            Available = new object();
+            Arrived = new object();
             Empty = true;
             Full = false;
         }
