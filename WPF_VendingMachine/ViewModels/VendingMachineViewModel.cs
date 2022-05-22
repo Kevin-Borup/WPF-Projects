@@ -181,17 +181,17 @@ namespace WPF_VendingMachine.ViewModels
             PowerChangeSodaCommand = new Commands.PowerChangeSodaCommand(this, factory);
             PowerChangeBeerCommand = new Commands.PowerChangeBeerCommand(this, factory);
 
-            factory.producer.BottleCreated += BottleCreatedHandler;
-            factory.splitter.BottleSent += BottleSentHandler;
+            factory.producer.BottleCreated += BottleCreatedEvent;
+            factory.splitter.BottleSent += BottleSentEvent;
         }
 
-        private void BottleCreatedHandler(object? sender, Events.BottleEventArgs e)
+        private void BottleCreatedEvent(object? sender, Events.BottleEventArgs e)
         {
             Debug.WriteLine("Bottle Created Event Entered");
             BottleSpawner(e.Bottle, "Producer");
         }
 
-        private void BottleSentHandler(object? sender, Events.BottleEventArgs e)
+        private void BottleSentEvent(object? sender, Events.BottleEventArgs e)
         {
             Debug.WriteLine("Bottle Sent Event Entered");
             BottleSpawner(e.Bottle, "Splitter");
